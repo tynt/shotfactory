@@ -39,6 +39,8 @@ from md5 import md5
 
 
 pngfilename = 'browsershot.png'
+default_server_url = 'http://xmlrpc.browsershots.org/'
+
 # Security: allow only alphanumeric browser commands
 # Optionally within a subfolder, relative to working directory
 safe_command = re.compile(r'^([\w_\-]+[\\/])*[\w_\-\.]+$').match
@@ -244,8 +246,8 @@ def _main():
                       metavar="<password>",
                       help="supply password on command line (insecure)")
     parser.add_option("-s", dest="server", action="store", type="string",
-                      metavar="<url>", default="http://browsershots.org",
-                      help="server url (default: http://browsershots.org)")
+                      metavar="<url>", default=default_server_url,
+                      help="server url (%s)" % default_server_url)
     parser.add_option("-f", dest="factory", action="store", type="string",
                       metavar="<name>",
                       help="factory name (default: hostname)")
