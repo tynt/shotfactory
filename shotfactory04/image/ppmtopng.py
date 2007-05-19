@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # browsershots.org
 # Copyright (C) 2006 Johann C. Rocholl <johann@browsershots.org>
 #
@@ -17,29 +18,15 @@
 # MA 02111-1307, USA.
 
 """
-GUI-specific interface functions for X11.
+Simple converter from PPM to PNG.
 """
 
 __revision__ = '$Rev$'
 __date__ = '$Date$'
 __author__ = '$Author$'
 
+import sys
+from shotfactory04.image import hashmatch, png
 
-import os, time
-from shotfactory03.gui import linux as base
-
-
-class Gui(base.Gui):
-    """
-    Special functions for Opera.
-    """
-
-    def reset_browser(self):
-        """
-        Remove evidence of previous browser crash.
-        """
-        home = os.environ['HOME'].rstrip('/')
-        inifile = home + '/.opera/opera6.ini'
-        if os.path.exists(inifile):
-            print 'removing crash dialog from', inifile
-            os.system("sed -i -e 's/^Run=[0-9]$/Run=0/g' " + inifile)
+magic, width, height, maxval = hashmatch.read_ppm_header(sys.stdin)
+png.write(sys.stdout, width, height, sys.stdin.read(), '--interlace' in sys.argv)

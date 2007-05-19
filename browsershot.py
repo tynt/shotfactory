@@ -45,7 +45,7 @@ def _main():
 
     system = platform.system()
     if system == 'Linux':
-        from shotfactory03.gui import linux
+        from shotfactory04.gui import linux
         gui = linux.Gui(config, options)
     else:
         raise NotImplemented(system)

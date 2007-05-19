@@ -27,7 +27,7 @@ __author__ = '$Author: johann $'
 import os, time, sys, shutil
 import win32api, win32gui, win32con, pywintypes, _winreg
 from win32com.shell import shellcon, shell
-from shotfactory03.gui import windows
+from shotfactory04.gui import windows
 
 class Gui(windows.Gui):
     """

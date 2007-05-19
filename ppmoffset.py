@@ -26,7 +26,7 @@ __date__ = '$Date: 2006-06-04 23:07:15 +0200 (Sun, 04 Jun 2006) $'
 __author__ = '$Author: johann $'
 
 import sys
-from shotfactory03.image import hashmatch
+from shotfactory04.image import hashmatch
 
 arg0, filename1, filename2 = sys.argv
 print hashmatch.find_offset(filename1, filename2)

@@ -26,7 +26,7 @@ __author__ = '$Author$'
 
 
 import os, time
-from shotfactory03 import gui as base
+from shotfactory04 import gui as base
 
 
 class Gui(base.Gui):

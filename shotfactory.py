@@ -105,7 +105,7 @@ def browsershot(options, server, config, challenge, password):
     if platform_name in ('Microsoft', 'Microsoft Windows'):
         platform_name = 'Windows'
     if platform_name in ('Linux', 'Darwin', 'Windows'):
-        module_name = 'shotfactory03.gui.%s.%s' % (
+        module_name = 'shotfactory04.gui.%s.%s' % (
             platform_name.lower(),
             config['browser'].lower())
     else:

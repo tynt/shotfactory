@@ -3,18 +3,18 @@ import sys
 
 kwargs = {
     'name': 'ShotFactory',
-    'version': '0.3-alpha2',
+    'version': '0.4-alpha1',
     'description': 'Screenshot factory for browsershots.org',
     'author': 'Johann C. Rocholl',
     'author_email': 'johann@browsershots.org',
-    'url': 'http://v03.browsershots.org/',
+    'url': 'http://v04.browsershots.org/',
     'packages': [
-        'shotfactory03',
-        'shotfactory03.gui',
-        'shotfactory03.gui.darwin',
-        'shotfactory03.gui.linux',
-        'shotfactory03.gui.windows',
-        'shotfactory03.image',
+        'shotfactory04',
+        'shotfactory04.gui',
+        'shotfactory04.gui.darwin',
+        'shotfactory04.gui.linux',
+        'shotfactory04.gui.windows',
+        'shotfactory04.image',
         ],
     'scripts': [
         'shotfactory.py',
@@ -43,8 +43,8 @@ if 'py2exe' in sys.argv:
     kwargs['options'] = {
         'py2exe': {
             'includes': ','.join([
-                'shotfactory03.gui.windows.msie',
-                'shotfactory03.gui.windows.firefox',
+                'shotfactory04.gui.windows.msie',
+                'shotfactory04.gui.windows.firefox',
                 ]),
             'dist_dir': 'bin',
             }
