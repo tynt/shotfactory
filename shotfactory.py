@@ -36,6 +36,7 @@ import platform
 import re
 import traceback
 from md5 import md5
+from sha import sha
 
 
 pngfilename = 'browsershot.png'
@@ -70,11 +71,14 @@ def crypt_password(challenge, password, prefix = ''):
     """
     Encrypt a password for transmission.
     """
-    salt = challenge[:4]
-    nonce = challenge[4:]
-    crypt = md5(salt + password).hexdigest()
-    crypt = md5(prefix + crypt + nonce).hexdigest()
-    return crypt
+    nonce, algo, salt = challenge
+    if algo == 'md5':
+        crypt = md5(salt + password).hexdigest()
+    elif algo == 'sha1':
+        crypt = sha(salt + password).hexdigest()
+    else:
+        raise NotImplemented(algo)
+    return md5(prefix + crypt + nonce).hexdigest()
 
 
 def import_deep(name, parent_levels=0):
