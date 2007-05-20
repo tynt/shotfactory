@@ -315,11 +315,11 @@ def _main():
             challenge = None
 
             poll_start = time.time()
-            status, challenge, config = server.request.poll(
-                options.factory, crypt)
+            config = server.requests.poll(options.factory, crypt)
             poll_latency = time.time() - poll_start
             print 'server poll latency: %.2f seconds' % poll_latency
 
+            status = config['status']
             if status == 'OK':
                 print config
                 if not safe_command(config['command']):
