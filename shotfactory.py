@@ -166,11 +166,10 @@ def browsershot(options, server, config, challenge, password):
     return challenge
 
 
-def debug_factory_features(server, factory):
+def debug_factory_features(features):
     """
     Print the SQL WHERE clause for a given factory, with linebreaks.
     """
-    features = server.factory.features(factory)
     start = 0
     nested = 0
     for index in range(len(features)):
@@ -291,12 +290,14 @@ def _main():
         server = xmlrpclib.Server(options.server)
     challenge = server.auth.challenge(options.factory)
     crypt = crypt_password(challenge, options.password)
-    auth_test = server.auth.test(options.factory, crypt)
-    if not auth_test == 'OK':
-        print auth_test
+    status = server.auth.test(options.factory, crypt)
+    if status != 'OK':
+        print status
         sys.exit(1)
 
-    debug_factory_features(server, options.factory)
+    features = server.factories.features(options.factory)
+    debug_factory_features(features)
+
     challenge = None
     while True:
         try:
