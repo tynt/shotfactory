@@ -288,9 +288,9 @@ def _main():
             transport=ProxyTransport(options.proxy))
     else:
         server = xmlrpclib.Server(options.server)
-    challenge = server.auth.challenge(options.factory)
+    challenge = server.nonces.challenge(options.factory)
     crypt = crypt_password(challenge, options.password)
-    status = server.auth.test(options.factory, crypt)
+    status = server.nonces.checkPassword(options.factory, crypt)
     if status != 'OK':
         print status
         sys.exit(1)
@@ -309,7 +309,7 @@ def _main():
                 continue
             print '=' * 32, time.strftime('%H:%M:%S'), '=' * 32
             if not challenge:
-                challenge = server.auth.challenge(options.factory)
+                challenge = server.nonces.challenge(options.factory)
             print 'challenge:', challenge
             crypt = crypt_password(challenge, options.password)
             challenge = None
