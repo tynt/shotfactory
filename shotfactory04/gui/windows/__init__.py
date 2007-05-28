@@ -33,6 +33,7 @@ import win32con
 import pywintypes
 from shotfactory04 import gui as base
 
+
 class Gui(base.Gui):
     """
     Special functions for Windows.

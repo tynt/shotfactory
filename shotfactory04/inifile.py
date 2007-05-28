@@ -21,6 +21,7 @@ Very simple .ini file manipulator for Opera
 '\\r\\n'
 """
 
+
 class IniFile:
 
     def __init__(self, filename=None):
