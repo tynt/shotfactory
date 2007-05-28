@@ -28,6 +28,7 @@ __author__ = '$Author$'
 import os
 import time
 from shotfactory04.gui import linux as base
+from shotfactory04.inifile import IniFile
 
 
 class Gui(base.Gui):
@@ -43,4 +44,7 @@ class Gui(base.Gui):
         inifile = home + '/.opera/opera6.ini'
         if os.path.exists(inifile):
             print 'removing crash dialog from', inifile
-            os.system("sed -i -e 's/^Run=[0-9]$/Run=0/g' " + inifile)
+            ini = IniFile(inifile)
+            ini.set('State', 'Run', 0)
+            ini.set('User Prefs', 'Show New Opera Dialog', 0)
+            ini.save()
