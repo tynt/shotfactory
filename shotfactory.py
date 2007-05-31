@@ -40,7 +40,7 @@ from sha import sha
 
 
 pngfilename = 'browsershot.png'
-default_server_url = 'http://xmlrpc.browsershots.org/'
+default_server_url = 'http://api.browsershots.org/'
 
 # Security: allow only alphanumeric browser commands
 # Optionally within a subfolder, relative to working directory
@@ -103,7 +103,7 @@ def import_deep(name, parent_levels=0):
     raise ImportError
 
 
-def browsershot(options, server, config, challenge, password):
+def browsershot(options, server, config, password):
     """
     Process a screenshot request and upload the resulting PNG file.
     """
@@ -132,9 +132,10 @@ def browsershot(options, server, config, challenge, password):
     gui.prepare_screen()
 
     # Start new browser
-    encrypted = encrypt_password(challenge, password, 'redirect')
-    url = '/'.join((options.server, 'redirect', encrypted,
-                    str(config['request'])))
+    challenge = server.nonces.challenge(options.factory)
+    encrypted = encrypt_password(challenge, password)
+    url = '/'.join((options.server.rstrip('/'), 'redirect',
+                    options.factory, encrypted, str(config['request']), ''))
     gui.start_browser(config, url, options)
 
     # Make screenshots
@@ -150,9 +151,10 @@ def browsershot(options, server, config, challenge, password):
     binary_data = binary_file.read()
     binary = xmlrpclib.Binary(binary_data)
     binary_file.close()
+    challenge = server.nonces.challenge(options.factory)
     encrypted = encrypt_password(challenge, password)
     upload_started = time.time()
-    status, challenge = server.request.upload(binary, encrypted)
+    status = server.request.upload(binary, encrypted)
     seconds = time.time() - upload_started
     if status == 'OK':
         bytes = len(binary_data) * 8 / 6 # base64 encoding
@@ -163,7 +165,6 @@ def browsershot(options, server, config, challenge, password):
         status += " (after %.2f seconds)" % seconds
         print "upload failed: " + status
         log(status, config)
-    return challenge
 
 
 def debug_factory_features(features):
@@ -192,7 +193,7 @@ def debug_factory_features(features):
 
 def error_sleep(message):
     """
-    Log error message, sleep a while, get a new challenge.
+    Log error message, sleep a while.
     """
     if not message:
         message = 'runtime error'
@@ -283,11 +284,12 @@ def _main():
             options.proxy = os.environ['http_proxy']
 
     socket.setdefaulttimeout(180.0)
+    xmlrpc_url = options.server.rstrip('/') + '/xmlrpc/'
     if options.proxy:
-        server = xmlrpclib.Server(options.server,
+        server = xmlrpclib.Server(xmlrpc_url,
             transport=ProxyTransport(options.proxy))
     else:
-        server = xmlrpclib.Server(options.server)
+        server = xmlrpclib.Server(xmlrpc_url)
     challenge = server.nonces.challenge(options.factory)
     encrypted = encrypt_password(challenge, options.password)
     status = server.nonces.verify(options.factory, encrypted)
@@ -298,21 +300,16 @@ def _main():
     features = server.factories.features(options.factory)
     debug_factory_features(features)
 
-    challenge = None
     while True:
         try:
             load = systemload()
             if load > options.loadlimit:
-                challenge = None
                 error_sleep('system load %.2f exceeds limit %.2f, sleeping' %
                             (load, options.loadlimit))
                 continue
             print '=' * 32, time.strftime('%H:%M:%S'), '=' * 32
-            if not challenge:
-                challenge = server.nonces.challenge(options.factory)
-            print 'challenge:', challenge
+            challenge = server.nonces.challenge(options.factory)
             encrypted = encrypt_password(challenge, options.password)
-            challenge = None
 
             poll_start = time.time()
             config = server.requests.poll(options.factory, encrypted)
@@ -322,38 +319,31 @@ def _main():
             status = config['status']
             if status == 'OK':
                 print config
-                if config['command'] and not safe_command(config['command']):
+                if not safe_command(config['command']):
                     raise RuntimeError(
                         'unsafe command "%s"' % config['command'])
-                challenge = browsershot(options, server, config,
-                                        challenge, options.password)
+                browsershot(options, server, config, options.password)
             elif status == 'No matching request.':
                 print status
                 sleep()
             else:
                 error_sleep(status)
-                challenge = None
         except xmlrpclib.ProtocolError:
             error_sleep('XML-RPC protocol error.')
-            challenge = None
         except socket.gaierror, (errno, message):
             error_sleep('Socket gaierror: ' + message)
-            challenge = None
         except socket.timeout:
             error_sleep('Socket timeout.')
-            challenge = None
         except socket.error, error:
             if type(error.args) in (tuple, list):
                 (errno, message) = error.args
             else:
                 message = str(error.args)
             error_sleep('Socket error: ' + message)
-            challenge = None
         except RuntimeError, message:
             if options.verbose:
                 traceback.print_exc()
             error_sleep(str(message))
-            challenge = None
 
 
 if __name__ == '__main__':
