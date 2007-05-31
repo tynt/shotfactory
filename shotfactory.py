@@ -67,11 +67,11 @@ def sleep():
     time.sleep(60)
 
 
-def crypt_password(challenge, password, prefix = ''):
+def encrypt_password(challenge, password, prefix = ''):
     """
     Encrypt a password for transmission.
     """
-    nonce, algo, salt = challenge
+    algo, salt, nonce = challenge.split('$')
     if algo == 'md5':
         crypt = md5(salt + password).hexdigest()
     elif algo == 'sha1':
@@ -132,8 +132,8 @@ def browsershot(options, server, config, challenge, password):
     gui.prepare_screen()
 
     # Start new browser
-    crypt = crypt_password(challenge, password, 'redirect')
-    url = '/'.join((options.server, 'redirect', crypt,
+    encrypted = encrypt_password(challenge, password, 'redirect')
+    url = '/'.join((options.server, 'redirect', encrypted,
                     str(config['request'])))
     gui.start_browser(config, url, options)
 
@@ -150,9 +150,9 @@ def browsershot(options, server, config, challenge, password):
     binary_data = binary_file.read()
     binary = xmlrpclib.Binary(binary_data)
     binary_file.close()
-    crypt = crypt_password(challenge, password)
+    encrypted = encrypt_password(challenge, password)
     upload_started = time.time()
-    status, challenge = server.request.upload(binary, crypt)
+    status, challenge = server.request.upload(binary, encrypted)
     seconds = time.time() - upload_started
     if status == 'OK':
         bytes = len(binary_data) * 8 / 6 # base64 encoding
@@ -289,8 +289,8 @@ def _main():
     else:
         server = xmlrpclib.Server(options.server)
     challenge = server.nonces.challenge(options.factory)
-    crypt = crypt_password(challenge, options.password)
-    status = server.nonces.checkPassword(options.factory, crypt)
+    encrypted = encrypt_password(challenge, options.password)
+    status = server.nonces.verify(options.factory, encrypted)
     if status != 'OK':
         print status
         sys.exit(1)
@@ -311,11 +311,11 @@ def _main():
             if not challenge:
                 challenge = server.nonces.challenge(options.factory)
             print 'challenge:', challenge
-            crypt = crypt_password(challenge, options.password)
+            encrypted = encrypt_password(challenge, options.password)
             challenge = None
 
             poll_start = time.time()
-            config = server.requests.poll(options.factory, crypt)
+            config = server.requests.poll(options.factory, encrypted)
             poll_latency = time.time() - poll_start
             print 'server poll latency: %.2f seconds' % poll_latency
 
