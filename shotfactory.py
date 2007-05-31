@@ -154,7 +154,8 @@ def browsershot(options, server, config, password):
     challenge = server.nonces.challenge(options.factory)
     encrypted = encrypt_password(challenge, password)
     upload_started = time.time()
-    status = server.request.upload(binary, encrypted)
+    status = server.screenshots.upload(
+        options.factory, encrypted, config['request'], binary)
     seconds = time.time() - upload_started
     if status == 'OK':
         bytes = len(binary_data) * 8 / 6 # base64 encoding
