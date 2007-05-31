@@ -67,7 +67,7 @@ def sleep():
     time.sleep(60)
 
 
-def encrypt_password(challenge, password, prefix = ''):
+def encrypt_password(challenge, password):
     """
     Encrypt a password for transmission.
     """
@@ -78,7 +78,7 @@ def encrypt_password(challenge, password, prefix = ''):
         crypt = sha(salt + password).hexdigest()
     else:
         raise NotImplemented(algo)
-    return md5(prefix + crypt + nonce).hexdigest()
+    return md5(crypt + nonce).hexdigest()
 
 
 def import_deep(name, parent_levels=0):
