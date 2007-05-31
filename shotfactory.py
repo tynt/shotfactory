@@ -73,12 +73,12 @@ def encrypt_password(challenge, password):
     """
     algo, salt, nonce = challenge.split('$')
     if algo == 'md5':
-        crypt = md5(salt + password).hexdigest()
+        inner = md5(salt + password).hexdigest()
     elif algo == 'sha1':
-        crypt = sha(salt + password).hexdigest()
+        inner = sha(salt + password).hexdigest()
     else:
         raise NotImplemented(algo)
-    return md5(crypt + nonce).hexdigest()
+    return md5(inner + nonce).hexdigest()
 
 
 def import_deep(name, parent_levels=0):
