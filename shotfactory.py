@@ -322,7 +322,7 @@ def _main():
             status = config['status']
             if status == 'OK':
                 print config
-                if not safe_command(config['command']):
+                if config['command'] and not safe_command(config['command']):
                     raise RuntimeError(
                         'unsafe command "%s"' % config['command'])
                 challenge = browsershot(options, server, config,
