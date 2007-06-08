@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-# browsershots.org
-# Copyright (C) 2006 Johann C. Rocholl <johann@browsershots.org>
+# browsershots.org - Test your web design in different browsers
+# Copyright (C) 2007 Johann C. Rocholl <johann@browsershots.org>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
