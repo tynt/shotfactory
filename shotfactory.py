@@ -21,11 +21,9 @@
 Screenshot factory.
 """
 
-
 __revision__ = '$Rev$'
 __date__ = '$Date$'
 __author__ = '$Author$'
-
 
 import sys
 import os
@@ -37,7 +35,7 @@ import re
 import traceback
 from md5 import md5
 from sha import sha
-
+from xmlrpclib import Fault
 
 pngfilename = 'browsershot.png'
 default_server_url = 'http://api.browsershots.org/'
@@ -47,14 +45,14 @@ default_server_url = 'http://api.browsershots.org/'
 safe_command = re.compile(r'^([\w_\-]+[\\/])*[\w_\-\.]+$').match
 
 
-def log(status, extra=None):
+def log(message, extra=None):
     """
     Add a line to the log file.
     """
     logfile = open('shotfactory.log', 'a')
     logfile.write(time.strftime('%Y-%m-%d %H:%M:%S'))
     logfile.write(' ')
-    logfile.write(status)
+    logfile.write(message)
     if extra is not None:
         logfile.write(' ')
         logfile.write(str(extra))
@@ -154,18 +152,13 @@ def browsershot(options, server, config, password):
     challenge = server.nonces.challenge(options.factory)
     encrypted = encrypt_password(challenge, password)
     upload_started = time.time()
-    status = server.screenshots.upload(
+    server.screenshots.upload(
         options.factory, encrypted, config['request'], binary)
     seconds = time.time() - upload_started
-    if status == 'OK':
-        bytes = len(binary_data) * 8 / 6 # base64 encoding
-        print "uploaded %d bytes in %.2f seconds (%.2f kbps)" % (
-            bytes, seconds, 8 * bytes / seconds / 1000.0)
-        os.remove(pngfilename)
-    else:
-        status += " (after %.2f seconds)" % seconds
-        print "upload failed: " + status
-        log(status, config)
+    bytes = len(binary_data) * 8 / 6 # base64 encoding
+    print "uploaded %d bytes in %.2f seconds (%.2f kbps)" % (
+        bytes, seconds, 8 * bytes / seconds / 1000.0)
+    os.remove(pngfilename)
 
 
 def debug_factory_features(features):
@@ -203,7 +196,8 @@ def error_sleep(message):
     if not message.endswith('.'):
         message += '.'
     print message
-    log(message)
+    if message != "No matching request.":
+        log(message)
     sleep()
 
 
@@ -293,10 +287,7 @@ def _main():
         server = xmlrpclib.Server(xmlrpc_url)
     challenge = server.nonces.challenge(options.factory)
     encrypted = encrypt_password(challenge, options.password)
-    status = server.nonces.verify(options.factory, encrypted)
-    if status != 'OK':
-        print status
-        sys.exit(1)
+    server.nonces.verify(options.factory, encrypted)
 
     features = server.factories.features(options.factory)
     debug_factory_features(features)
@@ -313,22 +304,17 @@ def _main():
             encrypted = encrypt_password(challenge, options.password)
 
             poll_start = time.time()
-            config = server.requests.poll(options.factory, encrypted)
-            poll_latency = time.time() - poll_start
-            print 'server poll latency: %.2f seconds' % poll_latency
+            try:
+                config = server.requests.poll(options.factory, encrypted)
+            finally:
+                poll_latency = time.time() - poll_start
+                print 'server poll latency: %.2f seconds' % poll_latency
 
-            status = config['status']
-            if status == 'OK':
-                print config
-                if not safe_command(config['command']):
-                    raise RuntimeError(
-                        'unsafe command "%s"' % config['command'])
-                browsershot(options, server, config, options.password)
-            elif status == 'No matching request.':
-                print status
-                sleep()
-            else:
-                error_sleep(status)
+            print config
+            if not safe_command(config['command']):
+                raise RuntimeError(
+                    'unsafe command "%s"' % config['command'])
+            browsershot(options, server, config, options.password)
         except xmlrpclib.ProtocolError:
             error_sleep('XML-RPC protocol error.')
         except socket.gaierror, (errno, message):
@@ -341,6 +327,8 @@ def _main():
             else:
                 message = str(error.args)
             error_sleep('Socket error: ' + message)
+        except Fault, fault:
+            error_sleep(fault.faultString)
         except RuntimeError, message:
             if options.verbose:
                 traceback.print_exc()
