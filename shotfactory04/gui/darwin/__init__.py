@@ -59,3 +59,8 @@ class Gui(base.Gui):
             pdf.write_ppm(width, height, image, filename)
         else:
             self.shell('pngtopnm "%s" > "%s"' % (capture_filename, filename))
+
+    def close(self):
+        """Kill helper programs."""
+        self.shell('killall UserNotificationCenter > /dev/null 2>&1')
+        self.shell('killall "iCal Helper" > /dev/null 2>&1')
