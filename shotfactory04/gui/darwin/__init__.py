@@ -29,6 +29,7 @@ import time
 import appscript
 import MacOS
 from shotfactory04 import gui as base
+from shotfactory03.image import pdf
 
 
 class Gui(base.Gui):
@@ -50,5 +51,11 @@ class Gui(base.Gui):
 
     def screenshot(self, filename):
         """Save the full screen to a PPM file."""
-        self.shell('screencapture "%s.png"' % filename)
-        self.shell('pngtopnm "%s.png" > "%s"' % (filename, filename))
+        capture_filename = filename + '.capture'
+        self.shell('screencapture "%s"' % capture_filename)
+        head = file(capture_filename).read(20)
+        if head.startswith('%PDF'): # Mac OS X 10.3 Panther
+            width, height, image = pdf.read_pdf(capture_filename)
+            pdf.write_ppm(width, height, image, filename)
+        else:
+            self.shell('pngtopnm "%s" > "%s"' % (capture_filename, filename))
