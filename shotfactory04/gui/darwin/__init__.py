@@ -29,7 +29,7 @@ import time
 import appscript
 import MacOS
 from shotfactory04 import gui as base
-from shotfactory03.image import pdf
+from shotfactory04.image import pdf
 
 
 class Gui(base.Gui):
