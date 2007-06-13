@@ -172,16 +172,14 @@ def debug_factory_features(features):
     for index in range(len(features)):
         if features[index] == '(':
             nested += 1
-            if nested <= 2 and index > 0:
-                stop = index
-                print features[start:stop].strip()
-                start = stop
+            if nested <= 3 and index > 0:
+                print features[start:index].strip()
+                start = index
         elif features[index] == ')':
             nested -= 1
             if nested == 0 and features[index - 1] == ')':
-                stop = index
-                print features[start:stop].strip()
-                start = stop
+                print features[start:index].strip()
+                start = index
     rest = features[start:].strip()
     if rest:
         print rest
