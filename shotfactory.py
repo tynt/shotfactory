@@ -79,30 +79,6 @@ def encrypt_password(challenge, password):
     return md5(inner + nonce).hexdigest()
 
 
-def import_deep(name, parent_levels=0):
-    """
-    Import a module from some.levels.deep and return the module
-    itself, not its uppermost parent. If the module is unavailable,
-    try its parents, up to parent_levels. The default of 0 means no
-    parents are tried.
-    """
-    parts = name.split('.')
-    while len(parts) and parent_levels >= 0:
-        try:
-            print "trying to import", name
-            module = __import__(name)
-            for part in parts[1:]:
-                module = getattr(module, part)
-            return module
-        except ImportError:
-            parts.pop()
-            name = '.'.join(parts)
-            if parent_levels > 0:
-                parent_levels -= 1
-            else:
-                raise
-
-
 def browsershot(options, server, config, password):
     """
     Process a screenshot request and upload the resulting PNG file.
@@ -116,7 +92,7 @@ def browsershot(options, server, config, password):
             config['browser'].lower())
     else:
         raise NotImplementedError("unsupported platform: " + platform_name)
-    gui_module = import_deep(module_name, parent_levels=1)
+    gui_module = __import__(module_name, globals(), locals(), ['non-empty'])
     gui = gui_module.Gui(config, options)
 
     # Close old browser instances and helper programs
