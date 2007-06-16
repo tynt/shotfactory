@@ -69,14 +69,15 @@ def encrypt_password(challenge, password):
     """
     Encrypt a password for transmission.
     """
-    algo, salt, nonce = challenge.split('$')
-    if algo == 'md5':
-        inner = md5(salt + password).hexdigest()
-    elif algo == 'sha1':
-        inner = sha(salt + password).hexdigest()
+    if challenge['algorithm'] == 'md5':
+        inner = md5(challenge['salt'] + password).hexdigest()
+    elif challenge['algorithm'] == 'sha1':
+        inner = sha(challenge['salt'] + password).hexdigest()
     else:
-        raise NotImplemented(algo)
-    return md5(inner + nonce).hexdigest()
+        raise NotImplemented(
+            "Password encryption algorithm '%s' not implemented." %
+            challenge['algorithm'])
+    return md5(inner + challenge['nonce']).hexdigest()
 
 
 def browsershot(options, server, config, password):
@@ -148,7 +149,7 @@ def debug_factory_features(features):
     for index in range(len(features)):
         if features[index] == '(':
             nested += 1
-            if nested <= 3 and index > 0:
+            if nested <= 4 and index > 0:
                 print features[start:index].strip()
                 start = index
         elif features[index] == ')':
