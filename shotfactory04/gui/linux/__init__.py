@@ -130,7 +130,10 @@ class Gui(base.Gui):
         """
         Start browser and load website.
         """
-        self.shell('%s "%s" &' % (config['command'], url))
+        command = config['command'] or config['browser'].lower()
+        command = '%s "%s" &' % (command, url)
+        print 'running', command
+        self.shell(command)
         print "Sleeping %d seconds while page is loading." % options.wait
         time.sleep(options.wait - 5)
         self.maximize()
