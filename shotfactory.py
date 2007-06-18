@@ -209,6 +209,16 @@ class ProxyTransport(xmlrpclib.Transport):
         connection.putheader('Host', self.realhost)
 
 
+def user_agent():
+    return ' '.join((
+        'ShotFactory/0.4',
+        'r%s' % __revision__.strip('$').replace('Rev:', '').strip(),
+        'Python/%s' % (platform.python_version()),
+        '%s/%s' % (platform.system(), platform.release()),
+        platform.machine(),
+        ))
+
+
 def _main():
     """
     Main loop for screenshot factory.
@@ -258,10 +268,11 @@ def _main():
     socket.setdefaulttimeout(180.0)
     xmlrpc_url = options.server.rstrip('/') + '/xmlrpc/'
     if options.proxy:
-        server = xmlrpclib.Server(xmlrpc_url,
-            transport=ProxyTransport(options.proxy))
+        transport = ProxyTransport(options.proxy)
     else:
-        server = xmlrpclib.Server(xmlrpc_url)
+        transport = xmlrpclib.Transport()
+    transport.user_agent = user_agent()
+    server = xmlrpclib.Server(xmlrpc_url, transport)
     challenge = server.nonces.challenge(options.factory)
     encrypted = encrypt_password(challenge, options.password)
     server.nonces.verify(options.factory, encrypted)
