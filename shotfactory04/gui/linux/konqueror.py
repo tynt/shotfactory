@@ -45,5 +45,6 @@ class Gui(base.Gui):
         for cachedir in glob(os.path.join(dotdir, 'cache-*')):
             while os.path.islink(cachedir):
                 cachedir = os.readlink(cachedir)
-            print 'deleting cache', cachedir
-            shutil.rmtree(cachedir)
+            if os.path.exists(cachedir):
+                print 'deleting cache', cachedir
+                shutil.rmtree(cachedir)
