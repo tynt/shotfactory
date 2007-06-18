@@ -84,13 +84,15 @@ def browsershot(options, server, config, password):
     """
     Process a screenshot request and upload the resulting PNG file.
     """
+    browser_module = config['browser'].lower()
+    if browser_module == 'internet explorer':
+        browser_module = 'msie'
     platform_name = platform.system()
     if platform_name in ('Microsoft', 'Microsoft Windows'):
         platform_name = 'Windows'
     if platform_name in ('Linux', 'Darwin', 'Windows'):
         module_name = 'shotfactory04.gui.%s.%s' % (
-            platform_name.lower(),
-            config['browser'].lower())
+            platform_name.lower(), browser_module)
     else:
         raise NotImplementedError("unsupported platform: " + platform_name)
     gui_module = __import__(module_name, globals(), locals(), ['non-empty'])
