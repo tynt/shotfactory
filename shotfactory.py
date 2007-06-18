@@ -301,7 +301,7 @@ def _main():
                 print 'server poll latency: %.2f seconds' % poll_latency
 
             print config
-            if not safe_command(config['command']):
+            if config['command'] and not safe_command(config['command']):
                 raise RuntimeError(
                     'unsafe command "%s"' % config['command'])
             browsershot(options, server, config, options.password)
