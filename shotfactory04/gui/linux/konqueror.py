@@ -29,7 +29,6 @@ import os
 import shutil
 from glob import glob
 from shotfactory04.gui import linux as base
-from shotfactory04.inifile import IniFile
 
 
 class Gui(base.Gui):
