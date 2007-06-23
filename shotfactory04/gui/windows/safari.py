@@ -42,6 +42,28 @@ class Gui(windows.Gui):
     Special functions for Safari on Windows.
     """
 
+    def delete_if_exists(self, filename, message=None, verbose=True):
+        """
+        Print a message and delete a file, if the file exists.
+        """
+        if not os.path.exists(filename):
+            return
+        if verbose and message:
+           print message, filename
+        os.unlink(filename)
+
+    def reset_browser(self, verbose=True):
+        """
+        Delete browser cache.
+        """
+        appdata = shell.SHGetFolderPath(0, shellcon.CSIDL_LOCAL_APPDATA, 0, 0)
+        self.delete_if_exists(
+            os.path.join(appdata, 'Apple Computer', 'Safari', 'Cache.db'),
+            message="deleting browser cache:", verbose=verbose)
+        self.delete_if_exists(
+            os.path.join(appdata, 'Apple Computer', 'Safari', 'icon.db'),
+            message="deleting icon cache:", verbose=verbose)
+
     def start_browser(self, config, url, options):
         """
         Start browser and load website.
