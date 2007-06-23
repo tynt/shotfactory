@@ -69,10 +69,7 @@ class Gui(windows.Gui):
         """
         Start browser and load website.
         """
-        if config['command'] == 'firefox':
-            command = r'c:\progra~1\mozill~1\firefox.exe'
-        else:
-            command = config['command']
+        command = config['command'] or r'c:\progra~1\mozill~1\firefox.exe'
         print 'running', command
         os.spawnl(os.P_DETACH, command, os.path.basename(command), url)
         print "Sleeping %d seconds while page is loading." % options.wait
