@@ -27,7 +27,6 @@ __author__ = "$Author$"
 import os
 import time
 import sys
-import shutil
 import win32api
 import win32gui
 import win32con
@@ -50,20 +49,16 @@ class Gui(windows.Gui):
         appdata = shell.SHGetFolderPath(0, shellcon.CSIDL_APPDATA, 0, 0)
         profiles = os.path.join(appdata, 'Mozilla', 'Firefox', 'Profiles')
         for profile in os.listdir(profiles):
-            session = os.path.join(profiles, profile, 'sessionstore.js')
-            if os.path.exists(session):
-                if verbose:
-                    print "deleting previous session:", session
-                os.unlink(session)
+            self.delete_if_exists(
+                os.path.join(profiles, profile, 'sessionstore.js'),
+                message="deleting old session:", verbose=verbose)
         # Delete all files from the browser cache
         appdata = shell.SHGetFolderPath(0, shellcon.CSIDL_LOCAL_APPDATA, 0, 0)
         profiles = os.path.join(appdata, 'Mozilla', 'Firefox', 'Profiles')
         for profile in os.listdir(profiles):
-            cache = os.path.join(profiles, profile, 'Cache')
-            if os.path.exists(cache):
-                if verbose:
-                    print "deleting browser cache:", cache
-                shutil.rmtree(cache)
+            self.delete_if_exists(
+                os.path.join(profiles, profile, 'Cache'),
+                message="deleting browser cache:", verbose=verbose)
 
     def start_browser(self, config, url, options):
         """

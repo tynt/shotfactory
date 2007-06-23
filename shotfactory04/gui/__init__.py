@@ -26,6 +26,7 @@ __author__ = "$Author$"
 
 import time
 import os
+import shutil
 from array import array
 from shotfactory04.image import hashmatch, png
 
@@ -54,6 +55,23 @@ class Gui:
             self.display = options.display
         self.top_skip = 0
         self.bottom_skip = 0
+
+    def delete_if_exists(self, path, message=None, verbose=True):
+        """
+        Print a message and delete a file, if the file exists.
+        """
+        if not os.path.exists(path):
+            return
+        if verbose and message:
+           print message, path
+        if os.path.isdir(path):
+            delete = shutil.rmtree
+        else:
+            delete = os.unlink
+        try:
+            delete(path)
+        except (OSError, WindowsError), message:
+            print message
 
     def page_filename(self, page_number, direction='dn'):
         """Create a PPM filename."""

@@ -27,7 +27,6 @@ __author__ = "$Author$"
 import os
 import time
 import sys
-import shutil
 import win32api
 import win32gui
 import win32con
@@ -43,31 +42,19 @@ class Gui(windows.Gui):
     Special functions for MSIE on Windows.
     """
 
-    def reset_browser(self, verbose=False):
+    def reset_browser(self, verbose=True):
         """
         Delete all files from the browser cache.
         """
         cache = shell.SHGetFolderPath(0, shellcon.CSIDL_INTERNET_CACHE, 0, 0)
         cache = os.path.join(cache, 'Content.IE5')
         if not os.path.exists(cache):
-            if verbose:
-                print "browser cache not found:", cache
             return
         if verbose:
             print "deleting browser cache:", cache
         for filename in os.listdir(cache):
-            if filename.lower() == 'index.dat':
-                continue
-            if verbose:
-                print '   ', filename
-            try:
-                path = os.path.join(cache, filename)
-                if os.path.isdir(path):
-                    shutil.rmtree(path)
-                else:
-                    os.unlink(path)
-            except (OSError, WindowsError), message:
-                print message
+            if filename.lower() != 'index.dat':
+                self.delete_if_exists(os.path.join(cache, filename))
 
     def check_version_override(self, major, minor):
         """

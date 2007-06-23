@@ -27,7 +27,6 @@ __author__ = "$Author: johann $"
 import os
 import time
 import sys
-import shutil
 import win32api
 import win32gui
 import win32con
@@ -41,16 +40,6 @@ class Gui(windows.Gui):
     """
     Special functions for Safari on Windows.
     """
-
-    def delete_if_exists(self, filename, message=None, verbose=True):
-        """
-        Print a message and delete a file, if the file exists.
-        """
-        if not os.path.exists(filename):
-            return
-        if verbose and message:
-           print message, filename
-        os.unlink(filename)
 
     def reset_browser(self, verbose=True):
         """
