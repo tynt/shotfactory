@@ -80,6 +80,7 @@ class Gui(base.Gui):
         process_names = (
             'iexplore.exe',
             'firefox.exe',
+            'safari.exe',
             'dwwin.exe',
             'iedw.exe',
             'telnet.exe',
