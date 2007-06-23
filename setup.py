@@ -45,6 +45,7 @@ if 'py2exe' in sys.argv:
             'includes': ','.join([
                 'shotfactory04.gui.windows.msie',
                 'shotfactory04.gui.windows.firefox',
+                'shotfactory04.gui.windows.safari',
                 ]),
             'dist_dir': 'bin',
             }
