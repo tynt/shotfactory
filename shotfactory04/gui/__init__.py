@@ -169,7 +169,8 @@ class Gui:
         assert magic == 'P6'
         assert maxval == 255
 
-        offsets = self.scroll_pages(good_offset=height/2)
+        good_offset = height / 2 - 40 # Constant browser chrome
+        offsets = self.scroll_pages(good_offset)
         total = height + sum(offsets) - self.top_skip - self.bottom_skip
         print 'total:', total
         scanlines = self.scanlines(width, height, offsets)
