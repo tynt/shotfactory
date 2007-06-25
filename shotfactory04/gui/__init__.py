@@ -127,9 +127,7 @@ class Gui:
         """
         Merge multi-page screenshots and yield scanlines.
         """
-        overlaps = []
-        for offset in offsets:
-            overlaps.append(height - offset)
+        overlaps = [height - offset for offset in offsets]
         print 'offsets: ', offsets
         print 'overlaps:', overlaps
         total = 0
@@ -140,11 +138,11 @@ class Gui:
             if index == 0:
                 top = self.top_skip
             else:
-                top = overlaps[index-1] / 2
+                top = overlap_top(overlaps[index-1])
             if index == len(offsets):
                 bottom = self.bottom_skip
             else:
-                bottom = (overlaps[index]+1) / 2
+                bottom = overlap_bottom(overlaps[index])
             bottom = height - bottom
             segment = bottom - top
             total += segment
@@ -180,3 +178,32 @@ class Gui:
         writer = png.Writer(width, total)
         writer.write(outfile, scanlines)
         outfile.close()
+
+
+def overlap_top(overlap):
+    """
+    >>> overlap_top(0) >= 0 and overlap_top(1) >= 0
+    True
+    """
+    return overlap / 2
+
+
+def overlap_bottom(overlap):
+    """
+    >>> overlap_bottom(0) >= 0 and overlap_bottom(1) >= 0
+    True
+    """
+    return (overlap + 1) / 2
+
+
+def overlap_test(max_overlap=1000):
+    """
+    >>> overlap_test()
+    """
+    for overlap in range(max_overlap):
+        assert overlap == overlap_top(overlap) + overlap_bottom(overlap)
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
