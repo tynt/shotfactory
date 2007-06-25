@@ -63,7 +63,7 @@ class Gui:
         if not os.path.exists(path):
             return
         if verbose and message:
-           print message, path
+            print message, path
         if os.path.isdir(path):
             delete = shutil.rmtree
         else:

@@ -57,10 +57,10 @@ class Gui(base.Gui):
         time.sleep(0.1)
         self.js("window.resizeTo(screen.availWidth,screen.availHeight)")
         time.sleep(0.1)
-	try:
+        try:
             self.safari.activate()
-	except:
-	    raise RuntimeError("Could not activate Safari.")
+        except:
+            raise RuntimeError("Could not activate Safari.")
         time.sleep(0.1)
         self.js("document.location='%s'" % url)
         ready_count = 0
