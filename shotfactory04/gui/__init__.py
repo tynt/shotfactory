@@ -185,7 +185,7 @@ def overlap_top(overlap):
     >>> overlap_top(0) >= 0 and overlap_top(1) >= 0
     True
     """
-    return overlap / 2
+    return overlap - overlap / 4
 
 
 def overlap_bottom(overlap):
@@ -193,7 +193,7 @@ def overlap_bottom(overlap):
     >>> overlap_bottom(0) >= 0 and overlap_bottom(1) >= 0
     True
     """
-    return (overlap + 1) / 2
+    return overlap / 4
 
 
 def overlap_test(max_overlap=1000):
