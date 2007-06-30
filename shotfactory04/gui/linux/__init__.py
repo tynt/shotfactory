@@ -119,10 +119,7 @@ class Gui(base.Gui):
         """
         Save the full screen to a PPM file.
         """
-        parts = ('xwd -root -silent',
-                 'xwdtopnm',
-                 'pnmdepth 255 > "%s"' % filename)
-        error = self.shell('|'.join(parts))
+        error = self.shell('scrot "%s"' % filename)
         if error:
             raise RuntimeError('screenshot failed')
 
