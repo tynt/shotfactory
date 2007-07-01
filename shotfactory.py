@@ -175,7 +175,7 @@ def error_sleep(message):
     if not message.endswith('.'):
         message += '.'
     print message
-    if message != "No matching request.":
+    if not message.startswith('204 '):
         log(message)
     sleep()
 
@@ -256,13 +256,11 @@ def _main():
     if options.password is None:
         from getpass import getpass
         options.password = getpass('Factory password: ')
-
     if options.factory is None:
         options.factory = socket.gethostname()
         dot = options.factory.find('.')
         if dot > -1:
             options.factory = options.factory[:dot]
-
     if options.proxy is None:
         if 'http_proxy' in os.environ:
             options.proxy = os.environ['http_proxy']
@@ -318,7 +316,7 @@ def _main():
                 message = str(error.args)
             error_sleep('Socket error: ' + message)
         except Fault, fault:
-            error_sleep(fault.faultString)
+            error_sleep('%d %s' % (fault.faultCode, fault.faultString))
         except RuntimeError, message:
             if options.verbose:
                 traceback.print_exc()
