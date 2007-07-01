@@ -264,6 +264,8 @@ def _main():
     if options.proxy is None:
         if 'http_proxy' in os.environ:
             options.proxy = os.environ['http_proxy']
+    if not options.server.startswith('http://'):
+        options.server = 'http://' + options.server
 
     socket.setdefaulttimeout(180.0)
     xmlrpc_url = options.server.rstrip('/') + '/xmlrpc/'
