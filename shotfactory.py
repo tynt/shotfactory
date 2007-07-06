@@ -280,7 +280,8 @@ def _main():
     server.nonces.verify(options.factory, encrypted)
 
     features = server.factories.features(options.factory)
-    debug_factory_features(features)
+    if options.verbose:
+        debug_factory_features(features)
 
     while True:
         try:

@@ -42,6 +42,8 @@ class Gui(base.Gui):
         command = ('vncserver %s -geometry %dx%d -depth %d -dpi %d'
                    % (self.display, self.width, self.height,
                       self.bpp, self.dpi))
+        if self.verbose is None:
+            command = '%s >/dev/null 2>/dev/null' % command
         attempts = 3
         for attempt in range(attempts):
             error = os.system(command)
@@ -77,6 +79,11 @@ class Gui(base.Gui):
 
     def shell(self, command):
         """Run a shell command on my display."""
+        if self.verbose is None:
+            if command.endswith(' &'):
+                command = '%s >/dev/null 2>/dev/null &' % command[:-2]
+            else:
+                command = '%s >/dev/null 2>/dev/null' % command
         return os.system('DISPLAY=%s %s' % (self.display, command))
 
     def home(self):

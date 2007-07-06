@@ -53,6 +53,8 @@ class Gui:
         self.dpi = 90
         if hasattr(options, 'display'):
             self.display = options.display
+        if hasattr(options, 'verbose'):
+            self.verbose = options.verbose
         self.top_skip = 0
         self.bottom_skip = 0
 
