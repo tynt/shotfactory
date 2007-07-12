@@ -20,9 +20,9 @@
 GUI-specific interface functions for Safari on Microsoft Windows.
 """
 
-__revision__ = "$Rev: 1458 $"
-__date__ = "$Date: 2007-06-08 19:43:46 +0100 (Fr, 08 Jun 2007) $"
-__author__ = "$Author: johann $"
+__revision__ = "$Rev$"
+__date__ = "$Date$"
+__author__ = "$Author$"
 
 import os
 import time
