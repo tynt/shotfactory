@@ -27,6 +27,7 @@ __author__ = "$Author$"
 
 import os
 import time
+import shutil
 from shotfactory04.gui import linux as base
 from shotfactory04.inifile import IniFile
 
@@ -48,3 +49,19 @@ class Gui(base.Gui):
             ini.set('State', 'Run', 0)
             ini.set('User Prefs', 'Show New Opera Dialog', 0)
             ini.save()
+        """
+        Delete browser cache.
+        """
+        home = os.environ['HOME'].rstrip('/')
+        cachedir = os.path.join(home, '.opera/cache4')
+        if not os.path.exists(cachedir):
+            return
+        if os.path.exists(cachedir):
+            print 'deleting cache', cachedir
+            shutil.rmtree(cachedir)
+        cachedir = os.path.join(home, '.opera/opcache')
+        if not os.path.exists(cachedir):
+            return
+        if os.path.exists(cachedir):
+            print 'deleting cache', cachedir
+            shutil.rmtree(cachedir)

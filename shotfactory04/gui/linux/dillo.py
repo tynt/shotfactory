@@ -26,35 +26,17 @@ __author__ = "$Author$"
 
 
 import os
-import time
 import shutil
+from glob import glob
 from shotfactory04.gui import linux as base
 
 
 class Gui(base.Gui):
-    """
-    Special functions for Galeon.
-    """
+   """
+   Special functions for Dillo.
+   """
 
-    def reset_browser(self):
-        """
-        Delete evidence of previous browser crash.
-        """
-        home = os.environ['HOME'].rstrip('/')
-        crashfile = home + '/.galeon/session_crashed.xml'
-        if os.path.exists(crashfile):
-            print 'deleting crash file', crashfile
-            os.unlink(crashfile)
-        """
-        Delete browser cache.
-        """
-        home = os.environ['HOME'].rstrip('/')
-        dotdir = os.path.join(home, '.galeon/mozilla')
-        if not os.path.exists(dotdir):
-            return
-        for profile in os.listdir(dotdir):
-            # Delete cache
-            cachedir = os.path.join(dotdir, profile, 'Cache')
-            if os.path.exists(cachedir):
-                print 'deleting cache', cachedir
-                shutil.rmtree(cachedir)
+   def reset_browser(self):
+       """
+       No functions for dillo are required yet
+       """
