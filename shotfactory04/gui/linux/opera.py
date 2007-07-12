@@ -39,7 +39,7 @@ class Gui(base.Gui):
 
     def reset_browser(self):
         """
-        Remove evidence of previous browser crash.
+        Reset crashed state and delete browser cache.
         """
         home = os.environ['HOME'].rstrip('/')
         inifile = home + '/.opera/opera6.ini'
@@ -49,10 +49,6 @@ class Gui(base.Gui):
             ini.set('State', 'Run', 0)
             ini.set('User Prefs', 'Show New Opera Dialog', 0)
             ini.save()
-        """
-        Delete browser cache.
-        """
-        home = os.environ['HOME'].rstrip('/')
         cachedir = os.path.join(home, '.opera/cache4')
         if not os.path.exists(cachedir):
             return

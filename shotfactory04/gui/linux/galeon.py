@@ -38,17 +38,13 @@ class Gui(base.Gui):
 
     def reset_browser(self):
         """
-        Delete evidence of previous browser crash.
+        Delete crash file and browser cache.
         """
         home = os.environ['HOME'].rstrip('/')
         crashfile = home + '/.galeon/session_crashed.xml'
         if os.path.exists(crashfile):
             print 'deleting crash file', crashfile
             os.unlink(crashfile)
-        """
-        Delete browser cache.
-        """
-        home = os.environ['HOME'].rstrip('/')
         dotdir = os.path.join(home, '.galeon/mozilla')
         if not os.path.exists(dotdir):
             return
