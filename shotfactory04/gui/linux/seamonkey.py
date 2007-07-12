@@ -41,7 +41,7 @@ class Gui(base.Gui):
        Delete crash dialog and browser cache.
        """
        home = os.environ['HOME'].rstrip('/')
-       dotdir = os.path.join(home, '.mozilla')
+       dotdir = os.path.join(home, '.mozilla/default')
        if not os.path.exists(dotdir):
            return
        for profile in os.listdir(dotdir):
