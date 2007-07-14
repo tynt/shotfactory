@@ -50,3 +50,8 @@ class Gui(base.Gui):
            if os.path.exists(cachedir):
                print 'deleting cache', cachedir
                shutil.rmtree(cachedir)
+            # Delete crash dialog
+            crashfile = os.path.join(dotdir, profile, 'sessionstore.js')
+            if os.path.exists(crashfile):
+                print 'deleting crash file', crashfile
+                os.unlink(crashfile)
