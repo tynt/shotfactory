@@ -50,3 +50,12 @@ class Gui(base.Gui):
            if os.path.exists(cachedir):
                print 'deleting cache', cachedir
                shutil.rmtree(cachedir)
+       dotdir = os.path.join(home, '.mozilla.org/seamonkey')
+       if not os.path.exists(dotdir):
+           return
+       for profile in os.listdir(dotdir):
+           # Delete cache
+           cachedir = os.path.join(dotdir, profile, 'Cache')
+           if os.path.exists(cachedir):
+               print 'deleting cache', cachedir
+               shutil.rmtree(cachedir)
