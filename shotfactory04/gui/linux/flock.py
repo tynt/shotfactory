@@ -43,13 +43,13 @@ class Gui(base.Gui):
        home = os.environ['HOME'].rstrip('/')
        dotdir = os.path.join(home, '.flock/browser')
        if not os.path.exists(dotdir):
-           return
+            return
        for profile in os.listdir(dotdir):
-           # Delete cache
-           cachedir = os.path.join(dotdir, profile, 'Cache')
-           if os.path.exists(cachedir):
-               print 'deleting cache', cachedir
-               shutil.rmtree(cachedir)
+            # Delete cache
+            cachedir = os.path.join(dotdir, profile, 'Cache')
+            if os.path.exists(cachedir):
+                print 'deleting cache', cachedir
+                shutil.rmtree(cachedir)
             # Delete crash dialog
             crashfile = os.path.join(dotdir, profile, 'sessionstore.js')
             if os.path.exists(crashfile):
