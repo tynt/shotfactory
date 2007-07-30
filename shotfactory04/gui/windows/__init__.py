@@ -81,6 +81,7 @@ class Gui(base.Gui):
             'iexplore.exe',
             'firefox.exe',
             'safari.exe',
+            'opera.exe',
             'dwwin.exe',
             'iedw.exe',
             'telnet.exe',
