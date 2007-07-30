@@ -257,10 +257,7 @@ def _main():
         from getpass import getpass
         options.password = getpass('Factory password: ')
     if options.factory is None:
-        options.factory = socket.gethostname()
-        dot = options.factory.find('.')
-        if dot > -1:
-            options.factory = options.factory[:dot]
+        options.factory = socket.gethostname().split('.')[0].lower()
     if options.proxy is None:
         if 'http_proxy' in os.environ:
             options.proxy = os.environ['http_proxy']
