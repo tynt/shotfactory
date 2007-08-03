@@ -86,7 +86,7 @@ class Gui(base.Gui):
                 self.window.position.set((0, 22))
                 self.window.size.set((self.width, self.height - 26))
                 break
-            except appscript.CommandError:
+            except (appscript.CommandError, AttributeError):
                 print "Firefox not ready, retrying in 10 seconds..."
                 time.sleep(10)
                 retry -= 1
