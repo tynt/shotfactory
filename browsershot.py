@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# browsershots.org ShotFactory 0.3-beta1
+# browsershots.org - Test your web design in different browsers
 # Copyright (C) 2007 Johann C. Rocholl <johann@browsershots.org>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -21,9 +21,9 @@
 Make screenshots and combine them into one tall image.
 """
 
-__revision__ = "$Rev: 300 $"
-__date__ = "$Date: 2006-06-04 23:07:15 +0200 (Sun, 04 Jun 2006) $"
-__author__ = "$Author: johann $"
+__revision__ = "$Rev$"
+__date__ = "$Date$"
+__author__ = "$Author$"
 
 import platform
 import optparse
@@ -45,7 +45,7 @@ def _main():
 
     system = platform.system()
     if system == 'Linux':
-        from shotfactory03.gui import linux
+        from shotfactory04.gui import linux
         gui = linux.Gui(config, options)
     else:
         raise NotImplemented(system)

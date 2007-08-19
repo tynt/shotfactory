@@ -18,15 +18,9 @@
 # MA 02111-1307, USA.
 
 """
-Find vertical offset between two PPM files.
+Shotfactory library.
 """
 
 __revision__ = "$Rev$"
 __date__ = "$Date$"
 __author__ = "$Author$"
-
-import sys
-from shotfactory04.image import hashmatch
-
-arg0, filename1, filename2 = sys.argv
-print hashmatch.find_offset(filename1, filename2)

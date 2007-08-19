@@ -18,7 +18,7 @@
 # MA 02111-1307, USA.
 
 """
-Find vertical offset between two PPM files.
+Simple converter from PPM to PNG.
 """
 
 __revision__ = "$Rev$"
@@ -26,7 +26,8 @@ __date__ = "$Date$"
 __author__ = "$Author$"
 
 import sys
-from shotfactory04.image import hashmatch
+from shotfactory04.image import hashmatch, png
 
-arg0, filename1, filename2 = sys.argv
-print hashmatch.find_offset(filename1, filename2)
+magic, width, height, maxval = hashmatch.read_ppm_header(sys.stdin)
+png.write(sys.stdout, width, height, sys.stdin.read(),
+          '--interlace' in sys.argv)

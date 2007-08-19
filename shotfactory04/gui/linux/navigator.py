@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # browsershots.org - Test your web design in different browsers
 # Copyright (C) 2007 Johann C. Rocholl <johann@browsershots.org>
 #
@@ -18,15 +17,33 @@
 # MA 02111-1307, USA.
 
 """
-Find vertical offset between two PPM files.
+GUI-specific interface functions for X11.
 """
 
 __revision__ = "$Rev$"
 __date__ = "$Date$"
 __author__ = "$Author$"
 
-import sys
-from shotfactory04.image import hashmatch
 
-arg0, filename1, filename2 = sys.argv
-print hashmatch.find_offset(filename1, filename2)
+import os
+import time
+import shutil
+from shotfactory04.gui import linux as base
+
+
+class Gui(base.Gui):
+   """
+   Special functions for Netscape Navigator.
+   """
+
+   def reset_browser(self):
+       """
+       Delete crash dialog and browser cache.
+       """
+       home = os.environ['HOME'].rstrip('/')
+       cachedir = os.path.join(home, '.netscape/cache')
+       if not os.path.exists(cachedir):
+           return
+       if os.path.exists(cachedir):
+           print 'deleting cache', cachedir
+           shutil.rmtree(cachedir)
