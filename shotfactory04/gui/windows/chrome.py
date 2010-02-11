@@ -73,8 +73,7 @@ class Gui(windows.Gui):
 
     def find_maximizable(self):
         """Find window to maximize."""
-        return self.find_window_by_classname('Chrome_XPFrame')
-        # return self.find_window_by_title_suffix('Google Chrome')
+        return self.find_window_by_title_suffix('Google Chrome')
 
     def find_scrollable(self):
         """Find scrollable window."""
