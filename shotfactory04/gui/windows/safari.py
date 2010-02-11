@@ -49,6 +49,8 @@ class Gui(windows.Gui):
         """
         Start browser and load website.
         """
+        if url.find('http://') != 0:
+            url = 'http://' + url
         command = config['command'] or r'c:\progra~1\safari\safari.exe'
         print 'running', command
         try:
