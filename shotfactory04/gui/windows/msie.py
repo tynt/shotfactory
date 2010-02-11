@@ -92,18 +92,7 @@ class Gui(windows.Gui):
         """
         Find the scrollable window.
         """
-        ieframe = self.find_window_by_classname('IEFrame')
-        frametab = self.find_child_window_by_classname(
-            ieframe, "Frame Tab")
-        if frametab:
-            ieframe = frametab
-        tabs = self.find_child_window_by_classname(
-            ieframe, "TabWindowClass")
-        if tabs:
-            ieframe = tabs
-        return self.find_child_window_by_classname(
-            ieframe, "Shell DocObject View")
-
+        return win32gui.WindowFromPoint((self.width/2, self.height/2))
 
 # Test scrolling from command line
 if __name__ == '__main__':
